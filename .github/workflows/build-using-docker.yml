@@ -2,11 +2,12 @@ name: Build and test app in NCS docker container
 
 on:
   pull_request:
+  push:
 
 jobs:
   build-and-test-in-docker:
     runs-on: ubuntu-22.04
-    container: ghcr.io/nrfconnect/sdk-nrf-toolchain:v2.6.99
+    container: ghcr.io/nrfconnect/sdk-nrf-toolchain:v2.7.99
     defaults:
       run:
         # Bash shell is needed to set toolchain related environment variables in docker container

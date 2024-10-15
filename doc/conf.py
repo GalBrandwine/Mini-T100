@@ -6,9 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'NCS Example Application'
+project = 'Mini T100 - Zephyr Learning project'
 copyright = '2024, The Zephyr Community'
-author = 'The Zephyr Community'
+author = 'Gal Brandwine'
 release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
@@ -30,6 +30,6 @@ html_theme = 'alabaster'
 # WARNING: please, check breathe maintainership status before using this
 # extension in production!
 
-breathe_projects = {'ncs-example-application': '_build_doxygen/xml'}
-breathe_default_project = 'ncs-example-application'
+breathe_projects = {'Mini T100 - Zephyr Learning project': '_build_doxygen/xml'}
+breathe_default_project = 'Mini T100 - Zephyr Learning project'
 breathe_default_members = ('members', )
