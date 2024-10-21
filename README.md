@@ -1,3 +1,18 @@
+# Temporary addition
+1. install toolchain using the provided appimage
+2. form the appimage UI - select `create environment source script`
+3. save this script in ~/dev/nrf52840dk
+4. cd ~/dev/nrf52840dk
+5. source .env.sh
+6. unset $ZEPHYR_BASE
+7. call west init -m https://github.com/GalBrandwine/Mini-T100 mini-t100-workspace
+8. cd mini-t100-workspace
+9. west update
+10. code /home/gal/dev/nrf52840dk/mini-t100-workspace
+11. nrf plugin UI
+  * `open existing application` select `mini-t100-workspace/Mini-T100/app`
+
+
 # nRF Connect SDK example application
 
 <a href="https://github.com/nrfconnect/ncs-example-application/actions/workflows/build-using-docker.yml?query=branch%3Amain">
