@@ -27,19 +27,6 @@ struct blink_gpio_led_config
 	unsigned int period_ms;
 };
 
-static void motor_direction_toggle(struct k_timer *timer)
-{
-	const struct device *dev = k_timer_user_data_get(timer);
-	const struct blink_gpio_led_config *config = dev->config;
-	int ret;
-
-	ret = gpio_pin_toggle_dt(&config->led);
-	if (ret < 0)
-	{
-		LOG_ERR("Could not toggle LED GPIO (%d)", ret);
-	}
-}
-
 static int blink_gpio_led_set_period_ms(const struct device *dev,
 										unsigned int period_ms)
 {

@@ -15,6 +15,8 @@
 
 LOG_MODULE_REGISTER(main, CONFIG_APP_LOG_LEVEL);
 
+#define prop DT_PROP(DT_NODELABEL(left_motor_gpio_nodelabel), gals_property)
+
 // static const struct pwm_dt_spec motor_pwm_pin = PWM_DT_SPEC_GET(DT_NODELABEL(motor_pwm_pin));
 #define MIN_PERIOD PWM_SEC(1U) / 128U
 #define MAX_PERIOD PWM_SEC(1U)
@@ -67,6 +69,7 @@ int main(void)
 	struct sensor_value last_val = {0}, val;
 
 	printk("Zephyr Example Application %s\n", APP_VERSION_STRING);
+	printk("Got property: %s\n", prop);
 	// if (!pwm_is_ready_dt(&motor_pwm_pin))
 	// {
 	// 	printk("Error: PWM device %s is not ready\n", motor_pwm_pin.dev->name);

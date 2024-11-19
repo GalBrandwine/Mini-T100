@@ -1,3 +1,14 @@
+# Mini T100 ncs+Zephyr project
+
+## building
+
+**using west cli**
+
+```shell
+west build --build-dir /home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/app/build /home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/app --pristine --board nrf52840dk/nrf52840 -- -DNCS_TOOLCHAIN_VERSION=NONE -DCONF_FILE=/home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/app/prj.conf -DDTC_OVERLAY_FILE=../boards/nrf/52840dk/52840dk.overlay -DBOARD_ROOT=/home/gal/dev/nrf52840dk/mini-t100-workspace/zephyr
+```
+
+
 # Temporary addition
 1. install toolchain using the provided appimage
 2. form the appimage UI - select `create environment source script`

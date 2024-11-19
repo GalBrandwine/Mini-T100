@@ -1,0 +1,11 @@
+# Copyright (c) 2024 Nordic Semiconductor ASA
+# SPDX-License-Identifier: Apache-2.0
+
+config GPIO_STEPPER_MOTOR
+	bool "GPIO-PWM-controlled stepper motor driver"
+	default y
+	# depends on DT_HAS_BLINK_GPIO_LED_ENABLED
+	select GPIO
+	select PWM
+	help
+	  Enable this option to use the GPIO-controlled STEPPER_MOTTOR driver.
