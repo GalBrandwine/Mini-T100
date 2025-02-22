@@ -1,0 +1,23 @@
+# Copyright (c) 2024 Nordic Semiconductor ASA
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig MOTOR
+	bool "Stepper motor drivers"
+	help
+	  This option enables the blink custom driver class.
+
+if MOTOR
+
+config MOTOR_INIT_PRIORITY
+	int "Motor device drivers init priority"
+	default KERNEL_INIT_PRIORITY_DEVICE
+	help
+	  Motor device drivers init priority.
+
+module = MOTOR
+module-str = motor
+source "subsys/logging/Kconfig.template.log_config"
+
+rsource "Kconfig.l298n_motor"
+
+endif # MOTOR

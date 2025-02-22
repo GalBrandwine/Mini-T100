@@ -8,4 +8,4 @@ add_subdirectory_ifdef(CONFIG_BLINK blink)
 add_subdirectory_ifdef(CONFIG_SENSOR sensor)
 
 # Out-of-tree drivers for existing driver classes
-# add_subdirectory_ifdef(CONFIG_STEPPER_MOTOR motor/stepper_motor)
+add_subdirectory_ifdef(CONFIG_MOTOR motor/l298n_motor)

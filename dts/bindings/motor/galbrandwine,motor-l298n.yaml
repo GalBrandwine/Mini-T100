@@ -1,0 +1,52 @@
+# Copyright (c) 2024 Nordic Semiconductor ASA
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+  A generic binding for a GPIO-controlled blinking LED. Note that this binding
+  has no vendor prefix, as it does not target a specific device or vendor.
+
+  Example definition in devicetree:
+
+    left-motor-gpio {
+        compatible = "motor-gpio";
+        led-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+        blink-period-ms = <1000>;
+    };
+
+compatible: "galbrandwine,motor-l298n"
+
+include: [base.yaml]
+
+properties:
+  motor-side:
+    type: string
+    required: true
+    description: Human description for motor side (Left\Right)
+    enum:
+      - "Left"
+      - "Right"
+  left-motors:
+    type: phandle-array
+    required: true
+    description: ENB pin (usually for enable the motor \ or controlling with PWM )
+
+  # left-gpios:
+  #   type: phandle-array
+  #   required: true
+  #   description: Wires for motor B
+
+  # l298n-pin-pwm-as:
+  #   type: phandle-array
+  #   required: true
+  #   description: ENB pin (usually for enable the motor \ or controlling with PWM )
+  # l298n-pin-in1s:
+  #   type: phandle-array
+  #   required: true
+  #   description: Wire +  of motor B
+  # l298n-pin-in2s:
+  #   type: phandle-array
+  #   required: true
+  #   description: Wire -  of motor B
+  # blink-period-ms:
+  #   type: int
+  #   description: Initial blinking period in milliseconds.

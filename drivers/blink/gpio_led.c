@@ -27,8 +27,8 @@ struct blink_gpio_led_config
 	unsigned int period_ms;
 };
 
-static int blink_gpio_led_set_period_ms(const struct device *dev,
-										unsigned int period_ms)
+static int motor_l928n_set_speed(const struct device *dev,
+								 unsigned int period_ms)
 {
 	const struct blink_gpio_led_config *config = dev->config;
 	struct blink_gpio_led_data *data = dev->data;
@@ -45,7 +45,7 @@ static int blink_gpio_led_set_period_ms(const struct device *dev,
 }
 
 static const struct blink_driver_api blink_gpio_led_api = {
-	.set_period_ms = &blink_gpio_led_set_period_ms,
+	.set_period_ms = &motor_l928n_set_speed,
 };
 
 static int blink_gpio_led_init(const struct device *dev)
