@@ -13,7 +13,7 @@ description: |
         blink-period-ms = <1000>;
     };
 
-compatible: "galbrandwine,motor-l298n"
+compatible: "gabra,motor-l298n"
 
 include: [base.yaml]
 
@@ -25,15 +25,15 @@ properties:
     enum:
       - "Left"
       - "Right"
-  left-motors:
+  pwms:
     type: phandle-array
     required: true
-    description: ENB pin (usually for enable the motor \ or controlling with PWM )
+    description: The l298n PWM pins of motor
 
-  # left-gpios:
-  #   type: phandle-array
-  #   required: true
-  #   description: Wires for motor B
+  gpios:
+    type: phandle-array
+    required: true
+    description: Wires for motor B
 
   # l298n-pin-pwm-as:
   #   type: phandle-array

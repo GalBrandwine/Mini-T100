@@ -26,9 +26,12 @@
     };
 
     left_l298n_motor: left-l298n-motor{
-        compatible = "galbrandwine,motor-l298n";
+        compatible = "gabra,motor-l298n";
         motor-side = "Left";
-        left-motors = <&pwm0 27 PWM_MSEC(20) PWM_POLARITY_INVERTED>, <&gpio0 026 GPIO_ACTIVE_HIGH>,<&gpio0 02 GPIO_ACTIVE_HIGH>;
+        // left-motors = <&pwm0 27 PWM_MSEC(20) PWM_POLARITY_INVERTED>, <&gpio0 026 GPIO_ACTIVE_HIGH>,<&gpio0 02 GPIO_ACTIVE_HIGH>;
+
+        pwms = <&pwm0 0 PWM_MSEC(20) PWM_POLARITY_INVERTED>;
+        gpios = <&gpio0 026 GPIO_ACTIVE_HIGH>,<&gpio0 02 GPIO_ACTIVE_HIGH>;
 
     };
     //  motor_pwm_pin: motor-pwm-pin {
@@ -42,7 +45,11 @@
     //     led-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
     //     blink-period-ms = <1000>;
     // };
-
+    // &sw_pwm {
+    //     status = "okay";
+    //     clock-prescaler = <3>;
+    //     channel-gpios = <&edge_connector 19 GPIO_ACTIVE_HIGH>;
+    // };
     // pwmleds {
     //     compatible = "pwm-leds";
     //     motor_pwm_pin: pwm_led_0 {
@@ -68,6 +75,30 @@
 
     // };
 };
+&pinctrl {
+
+	pwm0_default: pwm0_default {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 0, 27)>;
+			nordic,invert;
+		};
+	};
+
+	pwm0_sleep: pwm0_sleep {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 0, 27)>;
+			low-power-enable;
+		};
+	};
+
+};
+
+
+// &sw_pwm {
+//     status = "okay";
+//     clock-prescaler = <3>;
+//     channel-gpios = <&edge_connector 19 GPIO_ACTIVE_HIGH>;
+// };
 
 //  &uicr {
     //      gpio-as-nreset;

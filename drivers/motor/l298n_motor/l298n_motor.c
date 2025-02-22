@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define DT_DRV_COMPAT galbrandwine_motor_l298n
+#define DT_DRV_COMPAT gabra_motor_l298n
 
 #include <zephyr/device.h>
 
@@ -40,7 +40,7 @@ static void motor_direction_toggle(struct k_timer *timer)
 	const struct motor_l298n_config *config = dev->config;
 	int ret;
 
-	ret = pwm_set_pulse_dt(&config->pin_pwm_b, PWM_MSEC(500));
+	ret = pwm_set_pulse_dt(&config->pin_pwm_b, 21500);
 	if (ret < 0)
 	{
 		printk("Error %d: failed to set pulse width\n", ret);
@@ -165,16 +165,15 @@ static int motor_l298n_init(const struct device *dev)
 }
 
 #define MOTOR_L298N_DEFINE(inst)                                     \
-                                                                     \
+	static struct motor_l298n_data data##inst;                       \
 	static const struct motor_l298n_config config##inst = {          \
-		.pin_pwm_b = PWM_DT_SPEC_INST_GET(inst, l298n_pin_pwm_b),   \ 
-		.pin_in4 = GPIO_DT_SPEC_INST_GET(inst, l298n_pin_in4),       \
-		.pin_in3 = GPIO_DT_SPEC_INST_GET(inst, l298n_pin_in3),       \
+		.pin_pwm_b = PWM_DT_SPEC_INST_GET(inst),                     \
+		.pin_in4 = GPIO_DT_SPEC_INST_GET_BY_IDX(inst, gpios, 0),     \
+		.pin_in3 = GPIO_DT_SPEC_INST_GET_BY_IDX(inst, gpios, 1),     \
 	};                                                               \
-                                                                     \
 	DEVICE_DT_INST_DEFINE(inst, motor_l298n_init, NULL, &data##inst, \
 						  &config##inst, POST_KERNEL,                \
 						  CONFIG_MOTOR_INIT_PRIORITY,                \
-						  &blink_gpio_led_api);
+						  &motor_l298n_api);
 
 DT_INST_FOREACH_STATUS_OKAY(MOTOR_L298N_DEFINE)
