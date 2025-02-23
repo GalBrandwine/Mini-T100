@@ -66,14 +66,19 @@ struct motor_timer
 	struct k_timer timer;
 } motor_killer_timer;
 
-static void motor_direction_toggle(struct k_timer *timer)
+bool direction = false;
+static int motor_direction_toggle(struct k_timer *timer)
 {
-	// const struct motor_driver_api *motor_api =
-	// 	(const struct motor_driver_api *)left_motor->api;
+	const struct motor_driver_api *motor_api =
+		(const struct motor_driver_api *)left_motor->api;
 
-	// return motor_api->set_speed(left_motor, 0);
-
-	motor_set_speed(left_motor, 0);
+	if (direction)
+	{
+		direction = false;
+		return motor_api->set_direction_speed(left_motor, RIGHT, 30);
+	}
+	direction = true;
+	return motor_api->set_direction_speed(left_motor, LEFT, 90);
 }
 
 int main(void)
@@ -111,11 +116,11 @@ int main(void)
 
 	gpio_add_callback(button.port, &button_cb_data);
 
-	// k_timer_init(&motor_killer_timer.timer, &motor_direction_toggle, NULL);
-	// // k_timer_user_data_set(&data->timer, (void *)dev);
+	k_timer_init(&motor_killer_timer.timer, &motor_direction_toggle, NULL);
+	// k_timer_user_data_set(&data->timer, (void *)dev);
 
-	// k_timer_start(&motor_killer_timer.timer, K_SECONDS(10),
-	// 			  K_FOREVER);
+	k_timer_start(&motor_killer_timer.timer, K_SECONDS(5),
+				  K_SECONDS(5));
 	char speed = 0;
 	while (true)
 	{

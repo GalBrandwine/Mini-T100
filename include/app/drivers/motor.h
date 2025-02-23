@@ -9,6 +9,12 @@
 #include <zephyr/device.h>
 #include <zephyr/toolchain.h>
 
+enum direction
+{
+	LEFT,
+	RIGHT,
+};
+
 /**
  * @defgroup drivers_motor Motor drivers
  * @ingroup drivers
@@ -43,10 +49,24 @@ __subsystem struct motor_driver_api
 	 * disable motor.
 	 *
 	 * @retval 0 if successful.
-	 * @retval -EINVAL if @p period_ms can not be set.
+	 * @retval -EINVAL if @p speed can not be set.
 	 * @retval -errno Other negative errno code on failure.
 	 */
 	int (*set_speed)(const struct device *dev, char speed);
+
+	/**
+	 * @brief Turn Motor to given direction, with given speed.
+	 *
+	 * @param dev Motor device instance.
+	 * @param
+	 * @param speed desired motor rotation direction and speed, 0 to
+	 * disable motor.
+	 *
+	 * @retval 0 if successful.
+	 * @retval -EINVAL if @p speed can not be set.
+	 * @retval -errno Other negative errno code on failure.
+	 */
+	int (*set_direction_speed)(const struct device *dev, enum direction direction, char speed);
 };
 
 /** @} */

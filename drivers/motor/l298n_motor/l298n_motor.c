@@ -101,9 +101,9 @@ static int motor_l928n_set_speed(const struct device *dev,
 	const struct motor_l298n_config *config = dev->config;
 	struct motor_l298n_data *data = dev->data;
 	int ret = 0;
-	LOG_DBG("Setting speed: %d", speed);
 	if (speed == 0)
 	{
+		LOG_DBG("Stopping motor");
 		k_timer_stop(&data->timer);
 
 		ret = pwm_set_dt(&config->pin_pwm_b, data->max_period, data->max_period);
@@ -136,13 +136,78 @@ static int motor_l928n_set_speed(const struct device *dev,
 	{
 		LOG_ERR("failed stopping pwm. ret %d", ret);
 	}
-	// k_timer_start(&data->timer, K_MSEC(speed * 100), K_MSEC(speed * 100));
 
 	return ret;
 }
 
+static int motor_l928n_rotate_right(const struct device *dev)
+{
+	int ret = 0;
+	const struct motor_l298n_config *config = dev->config;
+	LOG_DBG("Rotating Right");
+	ret = gpio_pin_set_dt(&config->pin_in4, 1);
+	if (ret != 0)
+	{
+		LOG_ERR("failed turning off gpio. ret %d", ret);
+	}
+	ret = gpio_pin_set_dt(&config->pin_in3, 0);
+	if (ret != 0)
+	{
+		LOG_ERR("failed turning off gpio. ret %d", ret);
+	}
+	return ret;
+}
+
+static int motor_l928n_rotate_left(const struct device *dev)
+{
+	int ret = 0;
+	const struct motor_l298n_config *config = dev->config;
+	LOG_DBG("Rotating Left pin %d");
+	ret = gpio_pin_set_dt(&config->pin_in4, 0);
+	if (ret != 0)
+	{
+		LOG_ERR("failed turning off gpio. ret %d", ret);
+	}
+	ret = gpio_pin_set_dt(&config->pin_in3, 1);
+	if (ret != 0)
+	{
+		LOG_ERR("failed turning off gpio. ret %d", ret);
+	}
+	return ret;
+}
+/**
+ * @brief Set direction and speed
+ *
+ * @param dev an L928N Motor Driver Instance
+ * @param direction enum direction - one of LEFT/RIGHT
+ * @param speed in percents (100 is pedal to the metal)
+ * @return int
+ */
+static int motor_l928n_set_direction_speed(const struct device *dev, enum direction direction, char speed)
+{
+	int ret = 0;
+	ret = motor_l928n_set_speed(dev, speed);
+
+	if (speed > 0)
+	{
+		switch (direction)
+		{
+		case LEFT:
+			ret = motor_l928n_rotate_left(dev);
+			break;
+		case RIGHT:
+			ret = motor_l928n_rotate_right(dev);
+			break;
+		default:
+			break;
+		}
+	}
+	return ret;
+}
 static const struct motor_driver_api motor_l298n_api = {
 	.set_speed = &motor_l928n_set_speed,
+	.set_direction_speed = &motor_l928n_set_direction_speed
+
 };
 
 static int motor_l298n_init(const struct device *dev)
@@ -178,8 +243,8 @@ static int motor_l298n_init(const struct device *dev)
 		}
 	}
 
-	printk("Done calibrating; maximum/minimum periods %u/%lu nsec\n",
-		   max_period, MIN_PERIOD);
+	LOG_DBG("Done calibrating; maximum/minimum periods %u/%lu nsec\n",
+			max_period, MIN_PERIOD);
 
 	data->max_period = max_period;
 	data->current_period = MIN_PERIOD;
@@ -189,7 +254,7 @@ static int motor_l298n_init(const struct device *dev)
 		return -ENODEV;
 	}
 
-	ret = gpio_pin_configure_dt(&config->pin_in4, GPIO_OUTPUT_HIGH);
+	ret = gpio_pin_configure_dt(&config->pin_in4, GPIO_OUTPUT_LOW);
 	if (ret < 0)
 	{
 		LOG_ERR("l298n %s GPIO not ready", &config->pin_in4.pin);
@@ -209,11 +274,12 @@ static int motor_l298n_init(const struct device *dev)
 		return ret;
 	}
 
-	k_timer_init(&data->timer, &motor_direction_toggle, NULL);
-	k_timer_user_data_set(&data->timer, (void *)dev);
+	// k_timer_init(&data->timer, &motor_direction_toggle, NULL);
+	// k_timer_user_data_set(&data->timer, (void *)dev);
 
-	k_timer_start(&data->timer, K_MSEC(500),
-				  K_MSEC(500));
+	// k_timer_start(&data->timer, K_MSEC(500),
+	// 			  K_MSEC(500));
+
 	// if (config->period_ms > 0)
 	// {
 	// 	k_timer_start(&data->timer, K_MSEC(config->period_ms),
