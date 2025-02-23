@@ -2,13 +2,15 @@
 # the Zephyr testing tool. In this file, multiple combinations can be specified,
 # so that you can easily test all of them locally or in CI.
 sample:
-  description: Example application
-  name: example-application
+  description: Example for using the l928n Motor driver
+  name: Sample L928N Motor driver
 common:
   sysbuild: true
   build_only: true
   integration_platforms:
     - custom_plank
+  extra_args:
+    - CONF_FILE="/home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/app/prj.conf;/home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/app/debug.conf"
 tests:
   app.default: {}
   app.debug:

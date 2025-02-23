@@ -13,7 +13,7 @@ description: |
         blink-period-ms = <1000>;
     };
 
-compatible: "gabra,motor-l298n"
+compatible: "gal,motor-l298n"
 
 include: [base.yaml]
 
