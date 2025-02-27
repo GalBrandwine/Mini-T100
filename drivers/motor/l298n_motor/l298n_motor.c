@@ -30,8 +30,8 @@ struct motor_l298n_data
  */
 struct motor_l298n_config
 {
-	struct gpio_dt_spec pin_in4;
-	struct gpio_dt_spec pin_in3;
+	struct gpio_dt_spec pin_inA;
+	struct gpio_dt_spec pin_inB;
 	struct pwm_dt_spec pin_pwm_b;
 };
 
@@ -41,46 +41,16 @@ static void motor_direction_toggle(struct k_timer *timer)
 	const struct motor_l298n_config *config = dev->config;
 	int ret;
 
-	// ret = pwm_set_pulse_dt(&config->pin_pwm_b, 21500);
-	// if (ret < 0)
-	// {
-	// 	LOG_ERR("Error %d: failed to set pulse width\n", ret);
-	// 	return;
-	// }
-
-	// if (dir == DOWN)
-	// {
-	// 	if (pulse_width <= min_pulse)
-	// 	{
-	// 		dir = UP;
-	// 		pulse_width = min_pulse;
-	// 	}
-	// 	else
-	// 	{
-	// 		pulse_width -= STEP;
-	// 	}
-	// }
-	// else
-	// {
-	// 	pulse_width += STEP;
-
-	// 	if (pulse_width >= max_pulse)
-	// 	{
-	// 		dir = DOWN;
-	// 		pulse_width = max_pulse;
-	// 	}
-	// }
-
-	LOG_DBG("toggling pin %d", &config->pin_in4.pin);
-	ret = gpio_pin_toggle_dt(&config->pin_in4);
+	LOG_DBG("toggling pin %d", &config->pin_inA.pin);
+	ret = gpio_pin_toggle_dt(&config->pin_inA);
 	if (ret < 0)
 	{
 		LOG_ERR("Could not toggle l298n GPIO (%d)", ret);
 		return;
 	}
 
-	LOG_DBG("toggling pin %d", &config->pin_in3.pin);
-	ret = gpio_pin_toggle_dt(&config->pin_in3);
+	LOG_DBG("toggling pin %d", &config->pin_inB.pin);
+	ret = gpio_pin_toggle_dt(&config->pin_inB);
 	if (ret < 0)
 	{
 		LOG_ERR("Could not toggle l298n GPIO (%d)", ret);
@@ -111,12 +81,12 @@ static int motor_l928n_set_speed(const struct device *dev,
 		{
 			LOG_ERR("failed stopping pwm. ret %d", ret);
 		}
-		ret = gpio_pin_set_dt(&config->pin_in4, 0);
+		ret = gpio_pin_set_dt(&config->pin_inA, 0);
 		if (ret != 0)
 		{
 			LOG_ERR("failed turning off gpio. ret %d", ret);
 		}
-		ret = gpio_pin_set_dt(&config->pin_in3, 0);
+		ret = gpio_pin_set_dt(&config->pin_inB, 0);
 		if (ret != 0)
 		{
 			LOG_ERR("failed turning off gpio. ret %d", ret);
@@ -145,12 +115,12 @@ static int motor_l928n_rotate_right(const struct device *dev)
 	int ret = 0;
 	const struct motor_l298n_config *config = dev->config;
 	LOG_DBG("Rotating Right");
-	ret = gpio_pin_set_dt(&config->pin_in4, 1);
+	ret = gpio_pin_set_dt(&config->pin_inA, 1);
 	if (ret != 0)
 	{
 		LOG_ERR("failed turning off gpio. ret %d", ret);
 	}
-	ret = gpio_pin_set_dt(&config->pin_in3, 0);
+	ret = gpio_pin_set_dt(&config->pin_inB, 0);
 	if (ret != 0)
 	{
 		LOG_ERR("failed turning off gpio. ret %d", ret);
@@ -163,12 +133,12 @@ static int motor_l928n_rotate_left(const struct device *dev)
 	int ret = 0;
 	const struct motor_l298n_config *config = dev->config;
 	LOG_DBG("Rotating Left pin %d");
-	ret = gpio_pin_set_dt(&config->pin_in4, 0);
+	ret = gpio_pin_set_dt(&config->pin_inA, 0);
 	if (ret != 0)
 	{
 		LOG_ERR("failed turning off gpio. ret %d", ret);
 	}
-	ret = gpio_pin_set_dt(&config->pin_in3, 1);
+	ret = gpio_pin_set_dt(&config->pin_inB, 1);
 	if (ret != 0)
 	{
 		LOG_ERR("failed turning off gpio. ret %d", ret);
@@ -248,43 +218,31 @@ static int motor_l298n_init(const struct device *dev)
 
 	data->max_period = max_period;
 	data->current_period = MIN_PERIOD;
-	if (!gpio_is_ready_dt(&config->pin_in4))
+	if (!gpio_is_ready_dt(&config->pin_inA))
 	{
-		LOG_ERR("l298n %s GPIO not ready", &config->pin_in4.port->name);
+		LOG_ERR("l298n %s GPIO not ready", &config->pin_inA.port->name);
 		return -ENODEV;
 	}
 
-	ret = gpio_pin_configure_dt(&config->pin_in4, GPIO_OUTPUT_LOW);
+	ret = gpio_pin_configure_dt(&config->pin_inA, GPIO_OUTPUT_LOW);
 	if (ret < 0)
 	{
-		LOG_ERR("l298n %s GPIO not ready", &config->pin_in4.pin);
+		LOG_ERR("l298n %s GPIO not ready", &config->pin_inA.pin);
 		return ret;
 	}
 
-	if (!gpio_is_ready_dt(&config->pin_in3))
+	if (!gpio_is_ready_dt(&config->pin_inB))
 	{
-		LOG_ERR("l298n %s GPIO not ready", &config->pin_in3.port->name);
+		LOG_ERR("l298n %s GPIO not ready", &config->pin_inB.port->name);
 		return -ENODEV;
 	}
 
-	ret = gpio_pin_configure_dt(&config->pin_in3, GPIO_OUTPUT_LOW);
+	ret = gpio_pin_configure_dt(&config->pin_inB, GPIO_OUTPUT_LOW);
 	if (ret < 0)
 	{
-		LOG_ERR("l298n %s GPIO not ready", &config->pin_in3.pin);
+		LOG_ERR("l298n %s GPIO not ready", &config->pin_inB.pin);
 		return ret;
 	}
-
-	// k_timer_init(&data->timer, &motor_direction_toggle, NULL);
-	// k_timer_user_data_set(&data->timer, (void *)dev);
-
-	// k_timer_start(&data->timer, K_MSEC(500),
-	// 			  K_MSEC(500));
-
-	// if (config->period_ms > 0)
-	// {
-	// 	k_timer_start(&data->timer, K_MSEC(config->period_ms),
-	// 				  K_MSEC(config->period_ms));
-	// }
 
 	return 0;
 }
@@ -293,8 +251,8 @@ static int motor_l298n_init(const struct device *dev)
 	static struct motor_l298n_data data##inst;                       \
 	static const struct motor_l298n_config config##inst = {          \
 		.pin_pwm_b = PWM_DT_SPEC_INST_GET_BY_IDX(inst, 0),           \
-		.pin_in4 = GPIO_DT_SPEC_INST_GET_BY_IDX(inst, gpios, 0),     \
-		.pin_in3 = GPIO_DT_SPEC_INST_GET_BY_IDX(inst, gpios, 1),     \
+		.pin_inA = GPIO_DT_SPEC_INST_GET_BY_IDX(inst, gpios, 0),     \
+		.pin_inB = GPIO_DT_SPEC_INST_GET_BY_IDX(inst, gpios, 1),     \
 	};                                                               \
 	DEVICE_DT_INST_DEFINE(inst, motor_l298n_init, NULL, &data##inst, \
 						  &config##inst, POST_KERNEL,                \

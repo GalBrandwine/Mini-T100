@@ -3,77 +3,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-//  /dts-v1/;
-// #include <nordic/nrf52840_qiaa.dtsi>
-// #include <zephyr/dt-bindings/pwm/pwm.h>
-//  #include "custom_plank-pinctrl.dtsi"
-
 / {
-    //  model = "Custom Plank Board";
-    // compatible = "vendor";
-
-    //  chosen {
-        //     //  zephyr,console = &uart0;
-        //     //  zephyr,sram = &sram0;
-        //     //  zephyr,flash = &flash0;
-    //  };
-    // aliases{
-        //     motor-pwm-pin=&pwm_led0;
-    // };
-    example_sensor: example-sensor {
-        compatible = "zephyr,example-sensor";
-        input-gpios = <&gpio0 11 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-    };
-
     left_l298n_motor: left-l298n-motor{
         compatible = "gal,motor-l298n";
-        motor-side = "Left";
-        // left-motors = <&pwm0 27 PWM_MSEC(20) PWM_POLARITY_INVERTED>, <&gpio0 026 GPIO_ACTIVE_HIGH>,<&gpio0 02 GPIO_ACTIVE_HIGH>;
+        motor-side = "Left";     
 
         pwms = <&pwm0 0 PWM_MSEC(20) PWM_POLARITY_INVERTED>;
+        // Pins order: IN3,IN4
         gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>, <&gpio0 02 GPIO_ACTIVE_HIGH>;
-
     };
-    //  motor_pwm_pin: motor-pwm-pin {
-        //     // compatible = "pwms";
-        //     pwms = <&pwm0 0 PWM_MSEC(20) PWM_POLARITY_INVERTED>;
-        //     label = "Motor B EN pin";
-    // };
+    
+    right_l298n_motor: right-l298n-motor{
+        compatible = "gal,motor-l298n";
+        motor-side = "Right";
 
-    // blink_led: blink-led {
-    //     compatible = "blink-gpio-led";
-    //     led-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-    //     blink-period-ms = <1000>;
-    // };
-    // &sw_pwm {
-    //     status = "okay";
-    //     clock-prescaler = <3>;
-    //     channel-gpios = <&edge_connector 19 GPIO_ACTIVE_HIGH>;
-    // };
-    // pwmleds {
-    //     compatible = "pwm-leds";
-    //     motor_pwm_pin: pwm_led_0 {
-    //         // pwms = <&pwm0 0 PWM_MSEC(500) PWM_POLARITY_NORMAL>;
-    //         pwms = <&pwm0 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
-    //         label = "HW-095 EN B pin";
-    //     };
-    // };
-    // leds {
-    //     compatible = "gpio-leds";
-    //     motor_en_b: led_2 {
-    //         gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-    //         label = "HW-095 en B (on\off)";
-    //     };
-    //     motor_b_in_3: led_0 {
-    //         gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
-    //         label = "HW-095 In3";
-    //     };
-    //     motor_b_in_4: led_1 {
-    //         gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
-    //         label = "HW-095 In4";
-    //     };
-
-    // };
+        pwms = <&pwm1 0 PWM_MSEC(20) PWM_POLARITY_INVERTED>;
+        // Pins order: IN1,IN2
+        gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>, <&gpio1 12 GPIO_ACTIVE_HIGH>;
+    };
+    
 };
 &pinctrl {
 
@@ -90,40 +38,28 @@
 			low-power-enable;
 		};
 	};
+    pwm1_default: pwm1_default {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 1, 10)>;
+			nordic,invert;
+		};
+	};
+
+	pwm1_sleep: pwm1_sleep {
+		group1 {
+			psels = <NRF_PSEL(PWM_OUT0, 1, 10)>;
+			low-power-enable;
+		};
+	};
 
 };
 
-
-// &sw_pwm {
-//     status = "okay";
-//     clock-prescaler = <3>;
-//     channel-gpios = <&edge_connector 19 GPIO_ACTIVE_HIGH>;
-// };
-
-//  &uicr {
-    //      gpio-as-nreset;
-//  };
-// &pwm0 {
-    //     status = "okay";
-    //     pinctrl-0 = <&pwm0_default>;
-    //     pinctrl-1 = <&pwm0_sleep>;
-    //     pinctrl-names = "default", "sleep";
-// };
-// &pwm0 {
-//     status = "okay";
-//     pinctrl-0 = <&pwm0_default_custom>;
-//     /delete-property/ pinctrl-1;
-//     pinctrl-names = "default";
-// };
-
-// &pinctrl {
-//     pwm0_default_custom: pwm0_default_custom {
-//         group1 {
-//             psels = <NRF_PSEL(PWM_OUT0, 1, 13)>; // P1.13
-//             nordic,invert;
-//         };
-//     };
-// };
+&pwm1 {
+    status = "okay";
+        pinctrl-0 = <&pwm1_default>;
+        pinctrl-1 = <&pwm1_sleep>;
+        pinctrl-names = "default", "sleep";
+};
 
 &gpiote {
     status = "okay";
@@ -135,17 +71,7 @@
 &gpio1 {
     status = "okay";
 };
-//  &uart0 {
-    //      compatible = "nordic,nrf-uarte";
-    //      status = "okay";
-
-    //      current-speed = <115200>;
-    //      pinctrl-0 = <&uart0_default>;
-    //      pinctrl-1 = <&uart0_sleep>;
-    //      pinctrl-names = "default", "sleep";
-//  };
 
 &uart0 {
-	// current-speed = <9600>;
     status = "okay";
 };
