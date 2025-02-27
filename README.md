@@ -1,5 +1,7 @@
 # Mini T100 ncs+Zephyr project
 
+[A youtube video of the Tank](https://youtube.com/shorts/_LrFASj23rY?si=4gkAO-4bpCex8b0E)
+
 ## building
 
 **using west cli**
@@ -10,7 +12,7 @@ west build --build-dir /home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/ap
 
 ## toolchanis
 
-### Setting / Switching / Sourcing 
+### Setting / Switching / Sourcing
 
 ```zsh
 # Searching
@@ -38,61 +40,17 @@ nrfutil toolchain-manager env
 4. cd ~/dev/nrf52840dk
 5. source .env.sh
 6. unset $ZEPHYR_BASE
-7. call west init -m https://github.com/GalBrandwine/Mini-T100 mini-t100-workspace
+7. call west init -m <https://github.com/GalBrandwine/Mini-T100> mini-t100-workspace
 8. cd mini-t100-workspace
 9. west update
 10. code /home/gal/dev/nrf52840dk/mini-t100-workspace
 11. nrf plugin UI
-  * `open existing application` select `mini-t100-workspace/Mini-T100/app`
 
+* `open existing application` select `mini-t100-workspace/Mini-T100/app`
 
-# nRF Connect SDK example application
+## The Mini-T100 is based on the nRF Connect SDK example application
 
-<a href="https://github.com/nrfconnect/ncs-example-application/actions/workflows/build-using-docker.yml?query=branch%3Amain">
-  <img src="https://github.com/nrfconnect/ncs-example-application/actions/workflows/build-using-docker.yml/badge.svg?event=push">
-</a>
-<a href="https://github.com/nrfconnect/ncs-example-application/actions/workflows/docs.yml?query=branch%3Amain">
-  <img src="https://github.com/nrfconnect/ncs-example-application/actions/workflows/docs.yml/badge.svg?event=push">
-</a>
-<a href="https://nrfconnect.github.io/ncs-example-application">
-  <img alt="Documentation" src="https://img.shields.io/badge/documentation-3D578C?logo=sphinx&logoColor=white">
-</a>
-<a href="https://nrfconnect.github.io/ncs-example-application/doxygen">
-  <img alt="API Documentation" src="https://img.shields.io/badge/API-documentation-3D578C?logo=c&logoColor=white">
-</a>
-
-This repository contains an nRF Connect SDK example application. The main
-purpose of this repository is to serve as a reference on how to structure nRF Connect
-SDK based applications. Some of the features demonstrated in this example are:
-
-- Basic [Zephyr application][app_dev] skeleton
-- [Zephyr workspace applications][workspace_app]
-- [Zephyr modules][modules]
-- [West T2 topology][west_t2]
-- [Custom boards][board_porting]
-- Custom [devicetree bindings][bindings]
-- Out-of-tree [drivers][drivers]
-- Out-of-tree libraries
-- Example CI configuration (using GitHub Actions)
-- Custom [west extension][west_ext]
-- Doxygen and Sphinx documentation boilerplate
-
-This repository is versioned together with the [nRF Connect SDK main tree][sdk-nrf]. This
-means that every time that nRF Connect SDK is tagged, this repository is tagged as well
-with the same version number, and the [manifest](west.yml) entry for `zephyr`
-will point to the corresponding nRF Connect SDK tag. For example, the `ncs-example-application`
-v2.5.0 will point to nRF Connect SDK v2.5.0. Note that the `main` branch always
-points to the development branch of nRF Connect SDK, also `main`.
-
-[app_dev]: https://docs.zephyrproject.org/latest/develop/application/index.html
-[workspace_app]: https://docs.zephyrproject.org/latest/develop/application/index.html#zephyr-workspace-app
-[modules]: https://docs.zephyrproject.org/latest/develop/modules.html
-[west_t2]: https://docs.zephyrproject.org/latest/develop/west/workspaces.html#west-t2
-[board_porting]: https://docs.zephyrproject.org/latest/guides/porting/board_porting.html
-[bindings]: https://docs.zephyrproject.org/latest/guides/dts/bindings.html
-[drivers]: https://docs.zephyrproject.org/latest/reference/drivers/index.html
-[sdk-nrf]: https://github.com/nrfconnect/sdk-nrf
-[west_ext]: https://docs.zephyrproject.org/latest/develop/west/extensions.html
+so there's might be little bloat.
 
 ## Getting started
 
@@ -103,18 +61,14 @@ Follow the official
 ### Initialization
 
 The first step is to initialize the workspace folder (``my-workspace``) where
-<<<<<<< HEAD
-the ``example-application`` and all nRF Connect SDK modules will be cloned. Run the following
-=======
 the ``ncs-example-application`` and all nRF Connect SDK modules will be cloned. Run the following
->>>>>>> ce4e81199a794d84b222e4d58a5c197753e2e21d
 command:
 
 ```shell
 # initialize my-workspace for the ncs-example-application (main branch)
-west init -m https://github.com/nrfconnect/ncs-example-application --mr main my-workspace
+west init -m https://github.com/GalBrandwine/Mini-T100 --mr main mini-t100-workspace
 # update nRF Connect SDK modules
-cd my-workspace
+cd mini-t100-workspace
 west update
 ```
 
@@ -123,14 +77,12 @@ west update
 To build the application, run the following command:
 
 ```shell
-cd example-application
+cd mini-t100-workspace
 west build -b $BOARD app
+west build -p auto -b nrf52840dk/nrf52840  . -- -DCONF_FILE="/home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/app/prj.conf;/home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/app/debug.conf"
 ```
 
-where `$BOARD` is the target board.
-
-You can use the `custom_plank` board found in this repository. Note that you can use
-Zephyr and nRF Connect SDK sample boards if an appropriate overlay is provided (see `app/boards`).
+where `$BOARD` is the target board. My case it was 
 
 A sample debug configuration is also provided. To apply it, run the following
 command:
