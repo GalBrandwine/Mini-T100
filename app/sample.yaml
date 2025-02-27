@@ -9,8 +9,6 @@ common:
   build_only: true
   integration_platforms:
     - custom_plank
-  extra_args:
-    - CONF_FILE="/home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/app/prj.conf;/home/gal/dev/nrf52840dk/mini-t100-workspace/Mini-T100/app/debug.conf"
 tests:
   app.default: {}
   app.debug:
