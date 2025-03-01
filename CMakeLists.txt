@@ -11,6 +11,4 @@ zephyr_syscall_include_directories(include)
 
 zephyr_include_directories(include)
 
-message(AUTHOR_WARNING "Gal is checking if this is being processed")
 add_subdirectory(drivers)
-add_subdirectory(lib)

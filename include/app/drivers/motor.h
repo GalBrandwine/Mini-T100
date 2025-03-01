@@ -58,7 +58,6 @@ __subsystem struct motor_driver_api
 	 * @brief Turn Motor to given direction, with given speed.
 	 *
 	 * @param dev Motor device instance.
-	 * @param
 	 * @param speed desired motor rotation direction and speed, 0 to
 	 * disable motor.
 	 *
