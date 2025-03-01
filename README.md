@@ -1,6 +1,6 @@
 # Mini T100 Tank project
 
-[image of mini-t100 tank chasis](Mini-T100/doc/minit-100 chasis.png)
+[image of mini-t100 tank chasis](https://github.com/GalBrandwine/Mini-T100/blob/main/doc/minit-100%20chasis.png)
 
 A fun project for learning Zephyr Drivers API and implementing a driver.
 
