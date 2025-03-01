@@ -6,6 +6,38 @@ A fun project for learning Zephyr Drivers API and implementing a driver.
 
 [A youtube video of the Tank](https://youtube.com/shorts/_LrFASj23rY?si=4gkAO-4bpCex8b0E)
 
+Introducing new API:
+
+```C
+__subsystem struct motor_driver_api
+{
+	/**
+	 * @brief Configure the Motor speed.
+	 *
+	 * @param dev Motor device instance.
+	 * @param speed desired motor rotation speed, 0 to
+	 * disable motor.
+	 *
+	 * @retval 0 if successful.
+	 * @retval -EINVAL if @p speed can not be set.
+	 * @retval -errno Other negative errno code on failure.
+	 */
+	int (*set_speed)(const struct device *dev, char speed);
+
+	/**
+	 * @brief Turn Motor to given direction, with given speed.
+	 *
+	 * @param dev Motor device instance.
+	 * @param speed desired motor rotation direction and speed, 0 to
+	 * disable motor.
+	 *
+	 * @retval 0 if successful.
+	 * @retval -EINVAL if @p speed can not be set.
+	 * @retval -errno Other negative errno code on failure.
+	 */
+	int (*set_direction_speed)(const struct device *dev, enum direction direction, char speed);
+};
+```
 
 ## The Mini-T100 is based on the nRF Connect SDK example application
 
